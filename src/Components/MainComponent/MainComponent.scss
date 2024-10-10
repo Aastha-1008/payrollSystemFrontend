@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@100;300;400;700&family=Varela+Round&display=swap');
+.main-container{
+    padding: 1rem;
+    font-family: "Varela Round", sans-serif;
+    .searchSection{
+        margin-top: 1rem;
+        p{
+            margin-bottom: .5rem;
+        }
+        #searchInput{
+            border-radius: 5px;
+            font-size: 18px;
+            padding: 5px;
+        }
+    }
+}
