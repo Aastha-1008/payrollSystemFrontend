@@ -85,7 +85,9 @@
         .data{
             display: flex;
             flex-direction: row;
-            column-gap: 1rem;
+            column-gap: rem 
+            
+            ;
             h1{
                 font-size: 20px;
             }
