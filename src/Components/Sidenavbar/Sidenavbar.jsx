@@ -7,6 +7,7 @@ export default function sidenavbar() {
       <ul>
         <li>Dashboard</li>
         <li>Employee</li>
+        <li>Department</li>
       </ul>
     </div>
   )

@@ -32,4 +32,7 @@
       letter-spacing: 1.1px;
     }
   }
+  button{
+    cursor: pointer;
+  }
 }
