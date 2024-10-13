@@ -1,5 +1,4 @@
 import './App.css';
-import Sidenavbar from './Components/Sidenavbar/Sidenavbar.jsx';
 import MainComponent from  './Components/MainComponent/MainComponent.jsx';
 
 function App() {
@@ -9,7 +8,6 @@ function App() {
         <h1>Payroll Management System</h1>
       </div>
       <div className='middle-container'>
-        <Sidenavbar/>
         <MainComponent/>
       </div>
       <div className='bottom-container'>

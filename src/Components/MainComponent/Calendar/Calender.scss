@@ -1,0 +1,23 @@
+.calender-container{
+    padding: 1rem;
+    .calender{
+        width: 80%;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        border: 2px solid black;
+        box-shadow: 1px 1px 10px 0px black;
+    }
+    h2{
+        margin-top: 1rem;
+        font-family: "Varela Round", sans-serif;
+    }
+    .eventList{
+        width: 80%;
+        margin-top: 1rem;
+        border: 1px solid gray;
+        height: fit-content;
+    }
+    .white-text{
+        color: white;
+    }
+}

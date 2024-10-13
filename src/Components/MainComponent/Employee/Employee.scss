@@ -1,0 +1,25 @@
+
+.Employee-container{
+    padding: 1rem;
+    font-family: "Varela Round", sans-serif;
+    
+    .searchSection{
+        margin-top: 1rem;
+        margin-left: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: end  ;
+        p{
+            margin-bottom: .5rem;
+        }
+        #searchInput{
+            border-radius: 5px;
+            font-size: 18px;
+            padding: 5px;
+            font-family: "Varela Round", sans-serif;
+        }
+    }
+    .Emp_data{
+        margin-top: 2rem;
+    }
+} 

@@ -1,0 +1,29 @@
+.sideNavbar-container{
+    display: flex;
+    position: relative;
+    background-color: black;
+    padding-top: 40%;
+    ul{
+        list-style: none;
+        li{
+            position: fixed;
+            border: 1px solid white;
+            box-shadow: 1px 1px 6px 1px rgb(156, 156, 156);
+            border-radius: 5px;
+            padding: .5rem 1rem;
+            font-size: 1.2rem;
+            width: 6rem;
+            height: 2rem;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            text-align: center;
+            a{
+                color: white;
+                text-decoration: none;
+            }
+        }
+        li:hover{
+            font-size: 1.1rem;
+        }
+    }
+}

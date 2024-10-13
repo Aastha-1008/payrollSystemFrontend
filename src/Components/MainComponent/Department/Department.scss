@@ -1,0 +1,41 @@
+.department-container{
+    padding: 1rem;
+    font-family: "Varela Round", sans-serif;
+    table{
+        width: 60%;
+        margin-top: 2rem;
+        .view{
+            width: 10rem;
+        }
+    }
+    .addDepartmentBtn{
+        position: absolute;
+        right: 5%;
+        top: 15%;
+    }
+    .addDepartment{
+        height: fit-content;
+        .data{
+            margin-top: 2rem;
+        }
+    }
+    .InputData{
+        display: flex;
+        flex-direction: column;
+    }
+    .tags{
+        width: 70%;
+        .tagsTitle{
+            color: white;
+            display: inline-block;
+            border: 1px solid gray;
+            padding: .5rem;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            height: fit-content;
+            button{
+                margin-left: 1rem;
+            }
+        }
+    }
+}
