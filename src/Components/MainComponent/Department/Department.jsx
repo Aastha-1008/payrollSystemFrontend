@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import './Department.scss';
 import { getDepartments } from '../../departmentService';
+import { getJobByDepartmentId,addJobToDepartment } from '../../jobService';
 
 const Department = () => {
+
+    const [addDepartment, setAddDepartment] = useState(false);
+    const [addJobSection , setAddJobSection] = useState(null);
+    const [departmentId , setDepartmentId] = useState(null);
+    const [departmentName, setDepartmentName] = useState(null);
+    const [isKeyReleased, setIsKeyReleased] = useState(false);
+    const [jobTags, setJobTags] = useState([]);
+    const [input, setInput] = useState('');
     const [department, setDepartment] = useState(null);
+    const [jobs, setJobs] = useState(null);
+    const [jobName , setJobName] = useState(null);
 
     useEffect(() => {
         fetchDepartment();
@@ -13,16 +24,36 @@ const Department = () => {
         try {
             const department = await getDepartments();
             setDepartment(department);
-            console.log(department);
+            console.log(department );
         } catch (error) {
             console.log("Error fetching department data", error);
         }
     }
 
-    const [addDepartment, setAddDepartment] = useState(false);
-    const [isKeyReleased, setIsKeyReleased] = useState(false);
-    const [jobTags, setJobTags] = useState([]);
-    const [input, setInput] = useState('');
+    const fetchJobs = async (departmentId , departmentName) => {
+        setDepartmentId(departmentId);
+        setDepartmentName(departmentName);
+        setJobs(null);
+        try {
+            const jobInDepartment = await getJobByDepartmentId(departmentId);
+            setJobs(jobInDepartment);
+        } catch (error) {
+            console.log("Error fetching jobs", error);
+        }
+    }
+
+    const onChangeJobName = (e) => {
+        const { value } = e.target;
+        setJobName(value);
+        console.log(jobName);
+    }
+
+    const addJobToDepartment = async () => {
+        // addJobToDepartment(departmentId ,jobName );
+        setJobName(true);
+        console.log("clicked on job add btn");
+    }
+
 
     const addDepartmentFunction = () => {
         setAddDepartment(true);
@@ -75,19 +106,38 @@ const Department = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {department &&
-                        department.map((d, index) => {
-                            return (<tr key={d.id}>
-                                <td>{d.id}</td>
-                                <td>{d.name}</td>
-                                <td>
-                                    <button className='view'>View All Jobs</button>
-                                    <button className='view'>View Employees</button>
-                                    <button className='edit'>Edit</button>
-                                </td>
-                            </tr>)
-                        })
-                    }
+                    {department && department.length > 0 ? (
+                        department.map((d, index) => (
+                            <React.Fragment key={d.id}>
+                                <tr>
+                                    <td>{d.id}</td>
+                                    <td>{d.name}</td>
+                                    <td>
+                                        <button className='view' onClick={() => fetchJobs(d.id)}>View All Jobs</button>
+                                        <button className='view'>View Employees</button>
+                                        <button className='edit'>Edit</button>
+                                    </td>
+                                </tr>
+                                {departmentId === d.id && jobs && jobs.length > 0 && (
+                                    <tr >
+                                        <td colSpan="3" className='jobData'>
+                                            <ul className='JobDepartmentContent'>
+                                                {jobs.map((j, index) => (
+                                                    <li key={index}><b>{index+1} - </b> {j.title}</li>
+                                                ))}
+
+                                                <button className='button jobBtn' onClick={() => addJobToDepartment()}>Add new Jobs &#8594; </button>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="3">No departments found</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
 
@@ -120,8 +170,21 @@ const Department = () => {
                         </div>
                     </div>
                 </div>
-                <button className='button'>Add</button>
+                <button className='button' onClick={()=> addJobToDepartment()}>Add</button>
             </div>}
+
+            {addJobSection && 
+                <div className='addJob-section'>
+                    <h1>Enter Job name that you wants to enter in {} Department</h1>
+                    <div>
+                        <input value={jobName} type = "text" placeholder='Enter Job Name' onChange={onChangeJobName}/>
+                    </div>
+                    <div>
+                        <button className='view'>Add</button>
+                        <button className='edit'>Cancel</button>
+                    </div>
+                </div>
+            }
         </div>
     )
 }
