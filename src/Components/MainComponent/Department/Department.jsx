@@ -1,132 +1,105 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './Department.scss';
 import { getDepartments } from '../../departmentService';
-import { getJobByDepartmentId,addJobToDepartment } from '../../jobService';
+import { getJobByDepartmentId } from '../../jobService';
 
 const Department = () => {
-
-    const [addDepartment, setAddDepartment] = useState(false);
-    const [addJobSection , setAddJobSection] = useState(null);
-    const [departmentId , setDepartmentId] = useState(null);
-    const [departmentName, setDepartmentName] = useState(null);
-    const [isKeyReleased, setIsKeyReleased] = useState(false);
+    const [showDepartmentSection, setShowDepartmentSection] = useState(false);
+    const [showJobSection, setShowJobSection] = useState(false);
+    const [selectedDepartment, setSelectedDepartment] = useState({ id: null, name: null });
     const [jobTags, setJobTags] = useState([]);
     const [input, setInput] = useState('');
-    const [department, setDepartment] = useState(null);
-    const [jobs, setJobs] = useState(null);
-    const [jobName , setJobName] = useState(null);
+    const [departments, setDepartments] = useState([]);
+    const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
-        fetchDepartment();
+        fetchDepartments();
     }, []);
 
-    const fetchDepartment = async () => {
+    useEffect(() => {
+        document.body.classList.toggle('freeze-background', showDepartmentSection || showJobSection);
+    }, [showDepartmentSection, showJobSection]);
+
+    const fetchDepartments = async () => {
         try {
-            const department = await getDepartments();
-            setDepartment(department);
-            console.log(department );
+            const departments = await getDepartments();
+            setDepartments(departments);
         } catch (error) {
-            console.log("Error fetching department data", error);
+            console.error("Error fetching departments:", error);
         }
-    }
+    };
 
-    const fetchJobs = async (departmentId , departmentName) => {
-        setDepartmentId(departmentId);
-        setDepartmentName(departmentName);
-        setJobs(null);
+    const fetchJobs = async (departmentId, departmentName) => {
+        setSelectedDepartment({ id: departmentId, name: departmentName });
         try {
-            const jobInDepartment = await getJobByDepartmentId(departmentId);
-            setJobs(jobInDepartment);
+            const jobsInDepartment = await getJobByDepartmentId(departmentId);
+            setJobs(jobsInDepartment);
         } catch (error) {
-            console.log("Error fetching jobs", error);
+            console.error("Error fetching jobs:", error);
         }
-    }
+    };
 
-    const onChangeJobName = (e) => {
-        const { value } = e.target;
-        setJobName(value);
-        console.log(jobName);
-    }
-
-    const addJobToDepartment = async () => {
-        // addJobToDepartment(departmentId ,jobName );
-        setJobName(true);
-        console.log("clicked on job add btn");
-    }
-
-
-    const addDepartmentFunction = () => {
-        setAddDepartment(true);
-    }
-
-    const closeAddDepartmentFunction = () => {
-        setAddDepartment(false);
-    }
-
-    const onChange = (e) => {
+    const handleJobTagChange = (e) => {
         const { value } = e.target;
         setInput(value);
-    }
+    };
 
-    const onKeyDown = (e) => {
-        const { key } = e;
+    const handleKeyDown = (e) => {
         const trimmedInput = input.trim();
-        if ((key === ',' || key === 'Enter') && trimmedInput.length && !jobTags.includes(trimmedInput)) {
+        if ((e.key === ',' || e.key === 'Enter') && trimmedInput && !jobTags.includes(trimmedInput)) {
             e.preventDefault();
-            setJobTags(prevState => [...prevState, trimmedInput]);
+            setJobTags((prevTags) => [...prevTags, trimmedInput]);
             setInput('');
-        }
-        if (key === 'Backspace' && !input.length && jobTags.length) {
+        } else if (e.key === 'Backspace' && !input && jobTags.length) {
             e.preventDefault();
-            const jobTagsCopy = [...jobTags];
-            const poppedTag = jobTagsCopy.pop();
-            e.preventDefault();
-            setJobTags(jobTagsCopy);
-            setInput(poppedTag);
+            setJobTags((prevTags) => prevTags.slice(0, -1));
         }
-    }
-
-    const onKeyUp = () => {
-        setIsKeyReleased(true);
-    }
+    };
 
     const deleteTag = (index) => {
-        setJobTags(prevState => prevState.filter((tag, i) => i !== index))
-    }
+        setJobTags((prevTags) => prevTags.filter((_, i) => i !== index));
+    };
+
+    const toggleShowDepartmentSection = () => {
+        setShowDepartmentSection((prev) => !prev);
+    };
+
+    const toggleShowJobSection = () => {
+        setShowJobSection((prev) => !prev);
+    };
 
     return (
         <div className='department-container'>
             <h1>Departments</h1>
-            <div className='addDepartmentBtn button' onClick={addDepartmentFunction}>Add Department</div>
+            <div className='addDepartmentBtn button' onClick={toggleShowDepartmentSection}>Add Department</div>
             <table>
                 <thead>
                     <tr>
-                        <th>Sr. No. </th>
+                        <th>Sr. No.</th>
                         <th>Department Name</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {department && department.length > 0 ? (
-                        department.map((d, index) => (
-                            <React.Fragment key={d.id}>
+                    {departments.length > 0 ? (
+                        departments.map((department, index) => (
+                            <React.Fragment key={department.id}>
                                 <tr>
-                                    <td>{d.id}</td>
-                                    <td>{d.name}</td>
+                                    <td>{department.id}</td>
+                                    <td>{department.name}</td>
                                     <td>
-                                        <button className='view' onClick={() => fetchJobs(d.id)}>View All Jobs</button>
+                                        <button className='view' onClick={() => fetchJobs(department.id, department.name)}>View All Jobs</button>
                                         <button className='view'>View Employees</button>
                                         <button className='edit'>Edit</button>
                                     </td>
                                 </tr>
-                                {departmentId === d.id && jobs && jobs.length > 0 && (
-                                    <tr >
+                                {selectedDepartment.id === department.id && jobs.length > 0 && (
+                                    <tr>
                                         <td colSpan="3" className='jobData'>
                                             <ul className='JobDepartmentContent'>
-                                                {jobs.map((j, index) => (
-                                                    <li key={index}><b>{index+1} - </b> {j.title}</li>
+                                                {jobs.map((job, jobIndex) => (
+                                                    <li key={jobIndex}><b>{jobIndex + 1} - </b> {job.title}</li>
                                                 ))}
-
-                                                <button className='button jobBtn' onClick={() => addJobToDepartment()}>Add new Jobs &#8594; </button>
+                                                <button className='button jobBtn' onClick={toggleShowJobSection}>Add new Jobs &#8594;</button>
                                             </ul>
                                         </td>
                                     </tr>
@@ -141,52 +114,53 @@ const Department = () => {
                 </tbody>
             </table>
 
-            {addDepartment && <div className='addDepartment'>
-                <div className='closeBtn' onClick={closeAddDepartmentFunction}>x</div>
-                <div className='data'>
-                    <div className='heading'>
-                        <h1>Department Name</h1>
-                    </div>
-                    <div className='InputData'>
-                        <input type="text" id="departmentName" placeholder='Enter Department Name' />
-                    </div>
-                </div>
-                <div className='data'>
-                    <div className='heading'>
-                        <h1>Job</h1>
-                    </div>
-                    <div className='InputData'>
-                        <div className='tags'>
-                            {jobTags.map((tag, index) => (
-                                <div className='tagsTitle'>
-                                    {tag}
-                                    <button onClick={() => deleteTag(index)}>x</button>
-                                </div>
-                            ))}
+            {showDepartmentSection && (
+                <div className='addDepartment'>
+                    <div className='closeBtn' onClick={toggleShowDepartmentSection}>x</div>
+                    <div className='data'>
+                        <div className='heading'>
+                            <h1>Department Name</h1>
                         </div>
-                        <br />
-                        <div className='jobInputField'>
-                            <input value={input} placeholder='Enter a job' onKeyDown={onKeyDown} onKeyUp={onKeyUp} onChange={onChange} />
+                        <div className='InputData'>
+                            <input type="text" id="departmentName" placeholder='Enter Department Name' />
                         </div>
                     </div>
+                    <div className='data'>
+                        <div className='heading'>
+                            <h1>Job</h1>
+                        </div>
+                        <div className='InputData'>
+                            <div className='tags'>
+                                {jobTags.map((tag, index) => (
+                                    <div className='tagsTitle' key={index}>
+                                        {tag}
+                                        <button onClick={() => deleteTag(index)}>x</button>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className='jobInputField'>
+                                <input value={input} placeholder='Enter a job' onKeyDown={handleKeyDown} onChange={handleJobTagChange} />
+                            </div>
+                        </div>
+                    </div>
+                    <button className='button' onClick={toggleShowJobSection}>Add</button>
                 </div>
-                <button className='button' onClick={()=> addJobToDepartment()}>Add</button>
-            </div>}
+            )}
 
-            {addJobSection && 
+            {showJobSection && (
                 <div className='addJob-section'>
-                    <h1>Enter Job name that you wants to enter in {} Department</h1>
+                    <div className='closeBtn' onClick={toggleShowJobSection}>x</div>
+                    <h1>Enter Job name that you want to enter in {selectedDepartment.name} Department</h1>
                     <div>
-                        <input value={jobName} type = "text" placeholder='Enter Job Name' onChange={onChangeJobName}/>
+                        <input value={input} type="text" placeholder='Enter Job Name' onChange={handleJobTagChange} />
                     </div>
                     <div>
                         <button className='view'>Add</button>
-                        <button className='edit'>Cancel</button>
                     </div>
                 </div>
-            }
+            )}
         </div>
-    )
-}
+    );
+};
 
-export default Department
+export default Department;
