@@ -1,7 +1,11 @@
 import './App.css';
 import MainComponent from  './Components/MainComponent/MainComponent.jsx';
+import { useState } from 'react';
 
 function App() {
+
+  const [freeze , setFreeze] = useState(false);
+  
   return (
     <div className="App">
       <div className='top-container'>

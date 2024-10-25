@@ -11,3 +11,16 @@ export const getDepartments = async () => {
     }
 };
 
+export const addDepartmentWithJobs = async (departmentDetails) => {
+    console.log(departmentDetails);
+    try{
+        const response = await axiosInstance.post('/department/',departmentDetails , {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+    }catch(error){
+        console.log("Error in adding department with job tags");
+    }
+}
