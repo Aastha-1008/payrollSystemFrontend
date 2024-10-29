@@ -1,6 +1,8 @@
 .department-container{
     padding: 1rem;
     font-family: "Varela Round", sans-serif;
+    overflow-y: scroll;
+    padding-bottom: 3rem;
     height: 100vh;
     @keyframes  grow{
         from {
@@ -48,6 +50,16 @@
             font-size: .95rem;
             transition: 1s all ease;
         }
+    }
+    .changesNote{
+        position: fixed;
+        bottom: 8%;
+        right: 5%;
+        box-shadow: 1px 1px 10px 1px black;
+        padding: 1rem;
+        border-radius: 10px;
+        color: rgb(207, 0, 0);
+        font-weight: 600;
     }
     .addDepartmentBtn{
         position: absolute;

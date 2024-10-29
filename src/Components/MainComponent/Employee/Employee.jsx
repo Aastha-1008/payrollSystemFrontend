@@ -3,6 +3,24 @@ import './Employee.scss';
 
 export default function Employee() {
     const [addEmployee, setAddEmployee] = useState(false);
+    const [employeeData, setEmployeeData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        gender: '',
+        city: '',
+        department: '',
+        job: '',
+        salary: ''
+    });
+
+    const handleInputChange = (e) => {
+        setEmployeeData({
+            ...employeeData,
+            [e.target.id]: e.target.value
+        });
+        console.log(employeeData);
+    }
 
     const EmployeeAddAction = () => {
         setAddEmployee(true);
@@ -61,7 +79,7 @@ export default function Employee() {
                         <h1>First Name</h1>
                     </div>
                     <div className='InputData'>
-                        <input type="text" id="firstName" placeholder='Enter first Name' />
+                        <input type="text" id="firstName" placeholder='Enter first Name' onChange={handleInputChange}/>
                     </div>
                 </div>
                 <div className='data'>
@@ -69,7 +87,7 @@ export default function Employee() {
                         <h1>Last Name</h1>
                     </div>
                     <div className='InputData'>
-                        <input type="text" id="firstName" placeholder='Enter Last Name' />
+                        <input type="text" id="lastName" placeholder='Enter Last Name' onChange={handleInputChange}/>
                     </div>
                 </div>
                 <div className='data'>
@@ -77,7 +95,15 @@ export default function Employee() {
                         <h1>Email</h1>
                     </div>
                     <div className='InputData'>
-                        <input type="email" id="firstName" placeholder='Enter Last Name' />
+                        <input type="email" id="email" placeholder='Enter Your Email' onChange={handleInputChange}/>
+                    </div>
+                </div>
+                <div className='data'>
+                    <div className='heading'>
+                        <h1>Phone Number</h1>
+                    </div>
+                    <div className='InputData'>
+                        <input type="" id="phone  " placeholder='+91 xxxxx xxxxx' onChange={handleInputChange}/>
                     </div>
                 </div>
                 <div className='data'>
@@ -85,9 +111,9 @@ export default function Employee() {
                         <h1>Gender</h1>
                     </div>
                     <div className='InputData'>
-                        <input type="radio" id="male" name="gender" value="gender" />
+                        <input type="radio" id="male" name="gender" value="gender" onChange={handleInputChange}/>
                         <label for="Male">Male</label><br />
-                        <input type="radio" id="female" name="gender" value="gender" />
+                        <input type="radio" id="female" name="gender" value="gender" onChange={handleInputChange}/>
                         <label for="female">Female</label><br />
                     </div>
                 </div>
@@ -96,7 +122,7 @@ export default function Employee() {
                         <h1>City</h1>
                     </div>
                     <div className='InputData'>
-                        <input type="text" id="city" placeholder='Enter city' />
+                        <input type="text" id="city" placeholder='Enter city' onChange={handleInputChange}/>
                     </div>
                 </div>
                 <div className='data'>
@@ -104,7 +130,7 @@ export default function Employee() {
                         <h1>State</h1>
                     </div>
                     <div className='InputData'>
-                        <select name="state" id="state">
+                        <select name="state" id="state" onChange={handleInputChange}>
                             <option value='Andhara Pradesh'>Andhra Pradesh</option>
                             <option value='Arunachal Pradesh'>Arunachal Pradesh</option>
                             <option value='Assam'>Assam</option>
@@ -141,7 +167,7 @@ export default function Employee() {
                         <h1>Country</h1>
                     </div>
                     <div className='InputData'>
-                        <select name="country" id="country">
+                        <select name="country" id="country" onChange={handleInputChange}>
                             <option value="India">India</option>
                         </select>
                     </div>
@@ -151,7 +177,7 @@ export default function Employee() {
                         <h1>Department</h1>
                     </div>
                     <div className='InputData'>
-                        <input type="text" id="department" placeholder='Enter department' />
+                        <input type="text" id="department" placeholder='Enter department' onChange={handleInputChange}/>
                     </div>
                 </div>
 
@@ -160,7 +186,7 @@ export default function Employee() {
                         <h1>Job Title</h1>
                     </div>
                     <div className='InputData'>
-                        <input type="text" id="job" placeholder='Enter Job title' />
+                        <input type="text" id="job" placeholder='Enter Job title' onChange={handleInputChange}/>
                     </div>
                 </div>
 
@@ -169,7 +195,7 @@ export default function Employee() {
                         <h1>Salary</h1>
                     </div>
                     <div className='InputData'>
-                        <input type="text" id="salary" placeholder='Enter Salary' />
+                        <input type="text" id="salary" placeholder='Enter Salary' onChange={handleInputChange}/>
                     </div>
                 </div>
 

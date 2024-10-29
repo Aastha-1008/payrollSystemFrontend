@@ -24,6 +24,7 @@ export default function AddDepartment({setOverlay,setShowDepartmentSection}) {
             jobs: jobTags
         };
         await addDepartmentWithJobs(departmentDetails);
+        closeDepartmentSection();
     }
 
     const deleteTag = (index) => {

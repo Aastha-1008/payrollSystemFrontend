@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import './Department.scss';
 import { getDepartments } from '../../departmentService';
-import { getJobByDepartmentId } from '../../jobService';
+import { addJobToDepartment, getJobByDepartmentId } from '../../jobService';
 import AddDepartment from './AddDepartment/AddDepartment';
 
 const Department = () => {
-    const [overlay , setOverlay] = useState(false);
+    const [overlay, setOverlay] = useState(false);
     const [showDepartmentSection, setShowDepartmentSection] = useState(false);
     const [showJobSection, setShowJobSection] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState({ id: null, name: null });
     const [departments, setDepartments] = useState([]);
     const [jobs, setJobs] = useState([]);
-
+    const [jobName, setJobName] = useState();
+    const [currDept, setCurrDept] = useState();
 
     useEffect(() => {
         fetchDepartments();
@@ -27,6 +28,7 @@ const Department = () => {
     };
 
     const fetchJobs = async (departmentId, departmentName) => {
+        setCurrDept(departmentId);
         setJobs(false);
         setSelectedDepartment({ id: departmentId, name: departmentName });
         try {
@@ -36,6 +38,11 @@ const Department = () => {
             console.error("Error fetching jobs:", error);
         }
     };
+
+    const addJob = async () => {
+        await addJobToDepartment(currDept, jobName);
+        closeJobSection();
+    }
 
 
 
@@ -49,7 +56,7 @@ const Department = () => {
         setOverlay(true);
         setShowDepartmentSection(true);
     }
-    const closeJobSection = ( )=> {
+    const closeJobSection = () => {
         setOverlay(false);
         setShowJobSection(false);
     }
@@ -95,6 +102,17 @@ const Department = () => {
                                             </td>
                                         </tr>
                                     )}
+                                    {/* {
+                                        selectedDepartment.id === department.id && employees.length > 0 && (
+                                            <tr>
+                                                <td colSpan="3" className='employeeData'>
+                                                    <ul className='DepartmentEmployeeContent'>
+                                                        {employees.map()}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        )
+                                    } */}
                                 </React.Fragment>
                             ))
                         ) : (
@@ -105,8 +123,10 @@ const Department = () => {
                     </tbody>
                 </table>
 
+                <div className='changesNote'><p>** Refresh to view any changes.</p></div>
+
                 {showDepartmentSection && (
-                    <AddDepartment setOverlay={setOverlay} setShowDepartmentSection={setShowDepartmentSection}/>
+                    <AddDepartment setOverlay={setOverlay} setShowDepartmentSection={setShowDepartmentSection} />
                 )}
 
                 {showJobSection && (
@@ -114,10 +134,10 @@ const Department = () => {
                         <div className='closeBtn' onClick={closeJobSection}>x</div>
                         <h1>Enter Job name that you want to enter in {selectedDepartment.name} Department</h1>
                         <div>
-                            <input type="text" placeholder='Enter Job Name'  />
+                            <input value={jobName} type="text" placeholder='Enter Job Name' onChange={(e) => setJobName((e.target.value))} />
                         </div>
                         <div>
-                            <button className='view'>Add</button>
+                            <button className='view' onClick={addJob}>Add</button>
                         </div>
                     </div>
                 )}

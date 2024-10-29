@@ -11,9 +11,11 @@ export const getJobByDepartmentId = async (departmentId) => {
     }
 };
 
-export const addJobToDepartment = async (departmentId, jobName) => {
+export const addJobToDepartment = async (id, name) => {
     try{
-        const response = await axiosInstance.post(`/job/${departmentId}/${jobName}`);
+        const response = await axiosInstance.post(`/job/${id}/${name}`, { headers: {
+            'Content-Type': 'application/json'
+        }});
         return response.data;
     }catch(error){
         console.log(`Error in adding new jobs`);
